@@ -1,5 +1,5 @@
 /.vscode
-/.DatingApp.API/.vs
-/.DatingApp.API/.vscode
-/.DatingApp.API/bin
-/.DatingApp.API/obj
+/DatingApp.API/.vs
+/DatingApp.API/.vscode
+/DatingApp.API/bin
+/DatingApp.API/obj
