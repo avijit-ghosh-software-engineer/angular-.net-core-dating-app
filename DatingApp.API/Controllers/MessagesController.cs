@@ -1,130 +1,50 @@
-using System.Security.Claims;
-using AutoMapper;
-using DatingApp.API.Helpers;
-using DatingApp.API.Models;
-using DatingApp.API.Models.DataTransferObjects;
-using DatingApp.API.Repository;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
 namespace DatingApp.API.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("/users/{userId}/[controller]")]
-    [ServiceFilter(typeof(LogUserActivity))]
-    public class MessagesController : ControllerBase 
+    public class MessagesController : BaseApiController
     {
-        private readonly IDatingRepository DatingRepository;
-        private readonly IMapper mapper;
-        public MessagesController(IDatingRepository _DatingRepository, IMapper _mapper) {
-            DatingRepository = _DatingRepository;
-            mapper = _mapper;
-        }
-
-        [HttpGet("{id}", Name = "GetMessage")]
-        public async Task<IActionResult> GetMessage(int userId, int id) {
-            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
-                return Unauthorized();
-            }
-
-            var message = await DatingRepository.GetMessage(id);
-            if(message == null) {
-                return NotFound();
-            }
-
-            return Ok(message);
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        public MessagesController(IMapper mapper, IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams) {
-            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
-                return Unauthorized();
-            }
-            messageParams.UserId = userId;
-            var userMessages = await DatingRepository.GetMessagesForUser(messageParams);
-            var messages = mapper.Map<IEnumerable<MessageToReturnDTO>>(userMessages);
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesForUser([FromQuery]
+            MessageParams messageParams)
+        {
+            messageParams.Username = User.GetUsername();
 
-            Response.AddPagination(userMessages.CurrentPage, userMessages.PageSize, userMessages.TotalCount, userMessages.TotalPages);
+            var messages = await _unitOfWork.MessageRepository.GetMessagesForUser(messageParams);
 
-            return Ok(messages);
+            Response.AddPaginationHeader(messages.CurrentPage, messages.PageSize,
+                messages.TotalCount, messages.TotalPages);
+
+            return messages;
         }
 
-        [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult> GetMessageThread(int userId, int recipientId) {
-            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMessage(int id)
+        {
+            var username = User.GetUsername();
+
+            var message = await _unitOfWork.MessageRepository.GetMessage(id);
+
+            if (message.Sender.UserName != username && message.Recipient.UserName != username)
                 return Unauthorized();
-            }
-            var message = await DatingRepository.GetMessageThread(userId, recipientId);
-            var messageToReturn = mapper.Map<IEnumerable<MessageToReturnDTO>>(message);
-            return Ok(messageToReturn);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDTO messageForCreationDTO) {
-            var sender = await DatingRepository.GetUser(userId);
+            if (message.Sender.UserName == username) message.SenderDeleted = true;
 
-            if(sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
-                return Unauthorized();
-            }
-            messageForCreationDTO.SenderId = userId;
-            var recipient = await DatingRepository.GetUser(messageForCreationDTO.RecipientId);
-            if(recipient == null) {
-                return BadRequest("Could not find user.");
-            }
+            if (message.Recipient.UserName == username) message.RecipientDeleted = true;
 
-            var message = mapper.Map<Message>(messageForCreationDTO);
+            if (message.SenderDeleted && message.RecipientDeleted)
+                _unitOfWork.MessageRepository.DeleteMessage(message);
 
-            DatingRepository.Add(message);
+            if (await _unitOfWork.Complete()) return Ok();
 
-            if(await DatingRepository.SaveAll()) {
-                var messageToReturn = mapper.Map<MessageToReturnDTO>(message);
-                return CreatedAtRoute("GetMessage", new { userId = userId, id = message.Id }, messageToReturn);
-            }
-
-            throw new Exception("Create the message failed on save.");
-        }
-
-        [HttpPost("{id}")]
-        public async Task<IActionResult> DeleteMessage(int id, int userId) {
-            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
-                return Unauthorized();
-            }
-
-            var message = await DatingRepository.GetMessage(id);
-            if(message.SenderId == userId) {
-                message.SenderDeleted = true;
-            }
-            if(message.RecipientId == userId) {
-                message.RecipientDeleted = true;
-            }
-            if(message.SenderDeleted && message.RecipientDeleted) {
-                DatingRepository.Delete(message);
-            }
-
-            if(await DatingRepository.SaveAll()) {
-                return NoContent();
-            }
-
-            throw new Exception("Error deleting the message.");
-        }
-
-        [HttpPost("{id}/read")]
-        public async Task<IActionResult> MarkMessageAsRead(int userId, int id) {
-            if(userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
-                return Unauthorized();
-            }
-
-            var message = await DatingRepository.GetMessage(id);
-            if(message.RecipientId != userId) {
-                return Unauthorized();
-            }
-
-            message.IsRead = true;
-            message.DateRead = DateTime.Now;
-
-            await DatingRepository.SaveAll();
-            return NoContent();
+            return BadRequest("Problem deleting the message");
         }
     }
 }

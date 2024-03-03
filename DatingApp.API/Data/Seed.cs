@@ -1,33 +1,44 @@
-using DatingApp.API.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace DatingApp.API.Data
 {
-    public class Seed {
-        private readonly DataContext dataContext;
-        public Seed(DataContext _dataContext) {
-            dataContext = _dataContext;
-        }
+    public class Seed
+    {
+        public static async Task SeedUsers(UserManager<AppUser> userManager, 
+            RoleManager<AppRole> roleManager)
+        {
+            if (await userManager.Users.AnyAsync()) return;
 
-        public void SeedUsers() {
-            var userData = File.ReadAllText("SeedData/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-            foreach(var user in users) {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash("123456", out passwordHash, out passwordSalt);
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
+            var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
+            var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+            if (users == null) return;
+
+            var roles = new List<AppRole>
+            {
+                new AppRole{Name = "Member"},
+                new AppRole{Name = "Admin"},
+                new AppRole{Name = "Moderator"},
+            };
+
+            foreach (var role in roles)
+            {
+                await roleManager.CreateAsync(role);
+            }
+            
+            foreach (var user in users)
+            {
                 user.UserName = user.UserName.ToLower();
-                dataContext.Users.Add(user);
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, "Member");
             }
-            dataContext.SaveChanges();
-        }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) {
-            using(var hmac = new System.Security.Cryptography.HMACSHA512()) {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            var admin = new AppUser
+            {
+                UserName = "admin"
+            };
+
+            await userManager.CreateAsync(admin, "Pa$$w0rd");
+            await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"});
         }
     }
 }

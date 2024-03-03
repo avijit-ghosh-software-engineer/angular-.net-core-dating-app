@@ -1,0 +1,12 @@
+global using DatingApp.API.Data;
+global using DatingApp.API.Entities;
+global using DatingApp.API.Extensions;
+global using DatingApp.API.SignalR;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using DatingApp.API.DTOs;
+global using DatingApp.API.Interfaces;
+global using DatingApp.API.Helpers;
+global using AutoMapper;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Authorization;
