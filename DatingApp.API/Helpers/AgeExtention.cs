@@ -5,7 +5,7 @@ namespace DatingApp.API.Helpers
         public static int CalculateAge(this DateTime dateTime)
         {
             var age = DateTime.Today.Year - dateTime.Year;
-            if (dateTime.AddYears(age) > DateTime.Today)
+            if(dateTime.AddYears(age) > DateTime.Today)
             {
                 age--;
             }

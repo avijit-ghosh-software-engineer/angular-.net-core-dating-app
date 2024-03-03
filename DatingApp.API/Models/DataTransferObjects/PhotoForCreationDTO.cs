@@ -6,7 +6,7 @@ namespace DatingApp.API.Models.DataTransferObjects
         public string Description { get; set; }
         public DateTime DateAdded { get; set; }
 
-        public PhotoForCreationDTO () {
+        public PhotoForCreationDTO() {
             DateAdded = DateTime.Now;
         }
     }

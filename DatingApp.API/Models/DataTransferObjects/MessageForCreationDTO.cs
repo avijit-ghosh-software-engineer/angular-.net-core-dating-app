@@ -5,7 +5,7 @@ namespace DatingApp.API.Models.DataTransferObjects
         public int RecipientId { get; set; }
         public DateTime MessageSent { get; set; }
         public string Content { get; set; }
-        public MessageForCreationDTO () {
+        public MessageForCreationDTO() {
             MessageSent = DateTime.Now;
         }
     }

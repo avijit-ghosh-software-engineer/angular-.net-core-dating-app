@@ -49,7 +49,7 @@ builder.Services.AddScoped<LogUserActivity>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
@@ -64,9 +64,9 @@ else
     {
         bulder.Run(async context =>
         {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode =(int)HttpStatusCode.InternalServerError;
             var error = context.Features.Get<IExceptionHandlerFeature>();
-            if (error != null)
+            if(error != null)
             {
                 context.Response.AddApplicationError(error.Error.Message);
                 await context.Response.WriteAsync(error.Error.Message);
@@ -86,11 +86,11 @@ app.Run();
 
 void ApplyMigration()
 {
-    using (var scope = app.Services.CreateScope())
+    using(var scope = app.Services.CreateScope())
     {
         var _db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        if (_db.Database.GetPendingMigrations().Count() > 0)
+        if(_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }

@@ -7,7 +7,7 @@ namespace DatingApp.API.Models.DataTransferObjects
         public string Username { get; set; }
 
         [Required]
-        [StringLength (8, MinimumLength = 6, ErrorMessage = "You must specify password between 6 and 8 characters.")]
+        [StringLength(8, MinimumLength = 6, ErrorMessage = "You must specify password between 6 and 8 characters.")]
         public string Password { get; set; }
 
         [Required]
@@ -27,7 +27,7 @@ namespace DatingApp.API.Models.DataTransferObjects
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
 
-        public UserRegisterDTO () {
+        public UserRegisterDTO() {
             Created = DateTime.Now;
             LastActive = DateTime.Now;
         }
