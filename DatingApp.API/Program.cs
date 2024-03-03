@@ -55,7 +55,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options => {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "DatingApp API");
-        options.RoutePrefix = string.Empty;
+        options.RoutePrefix = "swagger";
     });
 }
 else
