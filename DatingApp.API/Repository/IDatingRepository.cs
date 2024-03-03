@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Threading.Tasks;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace DatingApp.API.Repository
 {

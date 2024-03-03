@@ -1,6 +1,5 @@
-using System;
-
-namespace DatingApp.API.Models.DataTransferObjects {
+namespace DatingApp.API.Models.DataTransferObjects
+{
     public class MessageForCreationDTO {
         public int SenderId { get; set; }
         public int RecipientId { get; set; }

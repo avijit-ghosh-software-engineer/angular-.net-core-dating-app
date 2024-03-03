@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Helpers {
+namespace DatingApp.API.Helpers
+{
 
     public class PageList<T> : List<T> {
         public int CurrentPage { get; set; }

@@ -1,33 +1,35 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Models;
 using DatingApp.API.Models.DataTransferObjects;
 using DatingApp.API.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DatingApp.API.Controllers {
+namespace DatingApp.API.Controllers
+{
     [ApiController]
     [Route ("[controller]")]
-    public class AuthController : ControllerBase {
+    public class AuthController : ControllerBase 
+    {
         private readonly IAuthRepository AuthRepository;
         private readonly IConfiguration Configuration;
         private readonly IMapper mapper;
-        public AuthController (IAuthRepository _AuthRepository, IConfiguration _configuration, IMapper _mapper) {
+        public AuthController (IAuthRepository _AuthRepository, IConfiguration _configuration, IMapper _mapper) 
+        {
             AuthRepository = _AuthRepository;
             Configuration = _configuration;
             mapper = _mapper;
         }
 
         [HttpPost ("register")]
-        public async Task<IActionResult> Register (UserRegisterDTO user) {
+        public async Task<IActionResult> Register (UserRegisterDTO user) 
+        {
             user.Username = user.Username.ToLower ();
-            if (await AuthRepository.IsUserExists (user.Username)) {
+            if (await AuthRepository.IsUserExists (user.Username)) 
+            {
                 return BadRequest ("User name already exists.");
             }
             var userToCreate = mapper.Map<User> (user);
@@ -38,7 +40,8 @@ namespace DatingApp.API.Controllers {
         }
 
         [HttpPost ("login")]
-        public async Task<IActionResult> Login (UserLoginDTO user) {
+        public async Task<IActionResult> Login (UserLoginDTO user) 
+        {
 
             var authUser = await AuthRepository.Login (user.UserName.ToLower (), user.Password);
             if (authUser == null)

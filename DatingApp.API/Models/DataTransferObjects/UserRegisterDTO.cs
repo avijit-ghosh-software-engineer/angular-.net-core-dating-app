@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DatingApp.API.Models.DataTransferObjects {
+namespace DatingApp.API.Models.DataTransferObjects
+{
     public class UserRegisterDTO {
         [Required]
         public string Username { get; set; }

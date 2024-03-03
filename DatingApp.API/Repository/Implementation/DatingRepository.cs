@@ -1,27 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Repository.Implementation {
+namespace DatingApp.API.Repository.Implementation
+{
     public class DatingRepository : IDatingRepository {
         private readonly DataContext dataContext;
         private readonly ImagesPathSettings ImagesPathSettings;
-        [Obsolete]
-        private readonly IHostingEnvironment hostingEnvironment;
-        public DatingRepository (DataContext _dataContext, IHostingEnvironment _hostingEnvironment, ImagesPathSettings _ImagesPathSettings) {
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public DatingRepository (DataContext _dataContext, IWebHostEnvironment _webHostEnvironment, ImagesPathSettings _ImagesPathSettings) {
             dataContext = _dataContext;
-            hostingEnvironment = _hostingEnvironment;
+            webHostEnvironment = _webHostEnvironment;
             ImagesPathSettings = _ImagesPathSettings;
         }
         public void Add<T> (T entity) where T : class {
@@ -83,7 +73,7 @@ namespace DatingApp.API.Repository.Implementation {
         [Obsolete]
         public async Task<string> FileUpload (int UserID, IFormFile file) {
             string uniqueFileName = null;
-            string uploadPath = Path.Combine (hostingEnvironment.WebRootPath, ImagesPathSettings.UserImages + UserID);
+            string uploadPath = Path.Combine (webHostEnvironment.WebRootPath, ImagesPathSettings.UserImages + UserID);
             if (!Directory.Exists (uploadPath)) {
                 Directory.CreateDirectory (uploadPath);
             }
@@ -106,11 +96,11 @@ namespace DatingApp.API.Repository.Implementation {
 
         [Obsolete]
         public async Task<bool> FileDelete (Photo photo) {
-            string uploadPath = Path.Combine (hostingEnvironment.WebRootPath, ImagesPathSettings.UserImages + photo.UserId);
+            string uploadPath = Path.Combine (webHostEnvironment.WebRootPath, ImagesPathSettings.UserImages + photo.UserId);
             var file = photo.Url.Split ('/') [photo.Url.Split ('/').Length - 1];
             string filePath = Path.Combine (uploadPath, file);
-            if ((System.IO.File.Exists (filePath))) {
-                System.IO.File.Delete (filePath);
+            if ((File.Exists (filePath))) {
+                File.Delete (filePath);
             }
             dataContext.Photos.Remove (photo);
 

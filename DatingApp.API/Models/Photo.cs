@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DatingApp.API.Models {
+namespace DatingApp.API.Models
+{
     public class Photo {
         [Key]
         public int Id { get; set; }

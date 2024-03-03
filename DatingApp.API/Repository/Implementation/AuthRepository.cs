@@ -1,10 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatingApp.API.Repository.Implementation {
+namespace DatingApp.API.Repository.Implementation
+{
     public class AuthRepository : IAuthRepository {
         private readonly DataContext dataContext;
         public AuthRepository (DataContext _dataContext) {

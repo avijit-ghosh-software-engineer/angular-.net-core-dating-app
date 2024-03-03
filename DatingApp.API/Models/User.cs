@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DatingApp.API.Models {
+namespace DatingApp.API.Models
+{
     public class User {
         [Key]
         public int Id { get; set; }

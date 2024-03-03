@@ -1,7 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
-
 namespace DatingApp.API.Models.DataTransferObjects
 {
     public class PhotoDetailsDTO

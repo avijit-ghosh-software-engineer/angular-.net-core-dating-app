@@ -1,6 +1,5 @@
 using DatingApp.API.Repository;
 using DatingApp.API.Repository.Implementation;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DatingApp.API.Helpers
 {

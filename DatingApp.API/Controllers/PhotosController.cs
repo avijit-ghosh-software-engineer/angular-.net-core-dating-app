@@ -1,26 +1,19 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using DatingApp.API.Models.DataTransferObjects;
 using DatingApp.API.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
-namespace DatingApp.API.Controllers {
+namespace DatingApp.API.Controllers
+{
     [Authorize]
     [ApiController]
     [Route ("users/{userId}/photos")]
-    public class PhotosController : ControllerBase {
+    public class PhotosController : ControllerBase 
+    {
         private readonly IDatingRepository DatingRepository;
         private readonly ImagesPathSettings ImagesPathSettings;
         private readonly IMapper mapper;

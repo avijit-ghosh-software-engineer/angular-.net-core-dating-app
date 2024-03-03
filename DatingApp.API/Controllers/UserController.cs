@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection.Metadata;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
@@ -13,15 +6,15 @@ using DatingApp.API.Models.DataTransferObjects;
 using DatingApp.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
-namespace DatingApp.API.Controllers {
+namespace DatingApp.API.Controllers
+{
     [Authorize]
     [ApiController]
     [Route ("[controller]")]
     [ServiceFilter (typeof (LogUserActivity))]
-    public class UserController : ControllerBase {
+    public class UserController : ControllerBase 
+    {
         private readonly IDatingRepository DatingRepository;
         private readonly IMapper mapper;
         public UserController (IDatingRepository _DatingRepository, IMapper _mapper) {

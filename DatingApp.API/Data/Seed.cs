@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using DatingApp.API.Models;
 using Newtonsoft.Json;
 
-namespace DatingApp.API.Data {
+namespace DatingApp.API.Data
+{
     public class Seed {
         private readonly DataContext dataContext;
         public Seed (DataContext _dataContext) {

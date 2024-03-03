@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace DatingApp.API.Models.DataTransferObjects {
+namespace DatingApp.API.Models.DataTransferObjects
+{
     public class UserLoginDTO {
         public string UserName { get; set; }
 

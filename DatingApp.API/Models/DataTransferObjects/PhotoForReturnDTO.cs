@@ -1,6 +1,5 @@
-using System;
-
-namespace DatingApp.API.Models.DataTransferObjects {
+namespace DatingApp.API.Models.DataTransferObjects
+{
     public class PhotoForReturnDTO {
         public int Id { get; set; }
         public string Url { get; set; }

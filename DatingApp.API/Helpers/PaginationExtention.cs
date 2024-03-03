@@ -1,9 +1,8 @@
-using DatingApp.API.Helpers;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DatingApp.API.Helpers {
+namespace DatingApp.API.Helpers
+{
     public static class PaginationExtention {
         public static void AddPagination (this HttpResponse response, int currentPage, int itemPerPage, int totalItems, int totalPages) {
             var paginationHeader = new PaginationHeader (currentPage, itemPerPage, totalItems, totalPages);

@@ -1,6 +1,3 @@
-using System;
-
-
 namespace DatingApp.API.Helpers
 {
     public static class AgeExtention
